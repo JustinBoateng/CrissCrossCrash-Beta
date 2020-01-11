@@ -16,7 +16,7 @@ public class CharMenu : MonoBehaviour {
     int MaxNoOfCards;
 
     public CardClass[] Team = new CardClass[10];
-    public CardButton[] TeamSelect = new CardButton[10];//10 for the team, 11th for the clear button
+    public CardButton[] TeamSelect = new CardButton[10];//10 for the team, 11th for the clear button 
 
     [SerializeField]
     public Button UPButton;
@@ -26,6 +26,17 @@ public class CharMenu : MonoBehaviour {
 
     [SerializeField]
     public Button CLEARButton;
+
+    [SerializeField]
+    public Button NEXTButton;
+
+    [SerializeField]
+    public VersusMenu VSMReference;
+
+
+    [SerializeField]
+    public int PlayerNumber;
+
 
     private int u = 0; //u goes through the CSelect Buttons 
     private int v = 0; //v sets up the highlight/press colors of the buttons in CSELECT
@@ -43,6 +54,8 @@ public class CharMenu : MonoBehaviour {
                 if (CS.getCard().getStatus().ToLower() == "striker" || CS.getCard().getStatus().ToLower() == "ether" || CS.getCard().getStatus().ToLower() == "psychic") {
                     w = 0;
                     while (TeamSelect[w].hasCard() && w < 5) { w++; }
+
+                    Team[w] = CS.getCard();
                     TeamSelect[w].setCard(CS.getCard()); //We set the card in the TeamSelect[w] Button's Card
                     TeamSelect[w].GetComponent<Image>().sprite = TeamSelect[w].getCard().getThumbnail();//Clicking on a button sets the thumbnail of the selected button to the Team Array button.
                 }
@@ -52,13 +65,15 @@ public class CharMenu : MonoBehaviour {
                     w = 6;
                     if (TeamSelect[w].hasCard()) { w++; } //w=7 now (the second Checkmate slot)
 
+                    Team[w] = CS.getCard();
                     TeamSelect[w].setCard(CS.getCard()); //We set the card in the TeamSelect[w] Button's Card
                     TeamSelect[w].GetComponent<Image>().sprite = TeamSelect[w].getCard().getThumbnail();//Clicking on a button sets the thumbnail of the selected button to the Team Array button.
                 }
 
                 else if (CS.getCard().getStatus().ToLower() == "slayer")
                 {
-                    w = 8;                    
+                    w = 8;
+                    Team[w] = CS.getCard();
                     TeamSelect[w].setCard(CS.getCard()); //We set the card in the TeamSelect[w] Button's Card
                     TeamSelect[w].GetComponent<Image>().sprite = TeamSelect[w].getCard().getThumbnail();//Clicking on a button sets the thumbnail of the selected button to the Team Array button.
                 }
@@ -66,6 +81,7 @@ public class CharMenu : MonoBehaviour {
                 else if (CS.getCard().getStatus().ToLower() == "boss")
                 {
                     w = 9;
+                    Team[w] = CS.getCard();
                     TeamSelect[w].setCard(CS.getCard()); //We set the card in the TeamSelect[w] Button's Card
                     TeamSelect[w].GetComponent<Image>().sprite = TeamSelect[w].getCard().getThumbnail();//Clicking on a button sets the thumbnail of the selected button to the Team Array button.
                 }
@@ -100,6 +116,7 @@ public class CharMenu : MonoBehaviour {
         UPButton.onClick.AddListener(new UnityAction(() => placeCards("UP")));
         DOWNButton.onClick.AddListener(new UnityAction(() => placeCards("DOWN")));
         CLEARButton.onClick.AddListener(new UnityAction(() => Clear()));
+        NEXTButton.onClick.AddListener(new UnityAction(() => VSMReference.SetTeam(PlayerNumber,Team)));
 
         /*
          *CSelect[7].onClick.AddListener(new UnityAction(placeCards("UP"))); 
@@ -188,5 +205,10 @@ public class CharMenu : MonoBehaviour {
         for (int i = 0; i < TeamSelect.Length; i++) {
             TeamSelect[i].removeCard();
         }
+    }
+
+    public CardClass[] getTeam()
+    {
+        return Team;
     }
 }
